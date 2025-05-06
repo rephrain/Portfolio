@@ -1,0 +1,197 @@
+@import "tailwindcss";
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+:root {
+    --primary-light: #7c8ac2;
+    --primary-dark: #a5b4e8;
+    --surface-light: #ffffff;
+    --surface-dark: #1f2937;
+    --text-light: #4b5563;
+    --text-dark: #e5e7eb;
+    --hover-light: #6378ba;
+    --hover-dark: #bcc7f0;
+    --toggle-light: #f3f4f6;
+    --toggle-dark: #4b5563;
+}
+
+body {
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.toggle-circle {
+    transition: transform 0.4s ease;
+}
+
+.dark .toggle-circle {
+    transform: translateX(1.5rem);
+}
+
+.theme-transition {
+    transition: all 0.3s ease;
+}
+
+/* Gradient accents */
+.gradient-accent {
+    background-image: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+}
+
+.dark .gradient-accent {
+    background-image: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+}
+
+/* Animated background for toggle */
+.toggle-bg {
+    position: relative;
+    overflow: hidden;
+}
+
+.toggle-bg:before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(#8b5cf6, #3b82f6, #60a5fa, #a78bfa, #8b5cf6);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    animation: rotate 4s linear infinite;
+}
+
+.dark .toggle-bg:before {
+    opacity: 0.1;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(1turn);
+    }
+}
+
+.skill-container {
+    padding: 2rem 0;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.chart-container {
+    position: relative;
+    height: 500px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    font-weight: 700;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    color: #1f2937;
+}
+
+.dark .section-title {
+    color: #f9fafb;
+}
+
+.title-underline {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 4px;
+    width: 80px;
+    border-radius: 9999px;
+    background: linear-gradient(to right, #60a5fa, #2dd4bf);
+}
+
+.skill-categories {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    background: #f3f4f6;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #374151;
+    border: 1px solid transparent;
+}
+
+.skill-detail {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.skill-detail.active {
+    opacity: 1;
+}
+
+.skill-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+}
+
+.dark .skill-name {
+    color: #f9fafb;
+}
+
+.skill-level {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #60a5fa, #2dd4bf);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.skill-description {
+    font-size: 0.875rem;
+    color: #6b7280;
+    max-width: 250px;
+}
+
+.dark .skill-description {
+    color: #d1d5db;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .chart-container {
+    height: 300px;
+    }
+}
+
+@media (max-width: 640px) {
+    .chart-container {
+    height: 250px;
+    }
+}

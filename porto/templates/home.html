@@ -1,0 +1,1621 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+.skill-container {
+    padding: 2rem 0;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.chart-container {
+    position: relative;
+    height: 500px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    font-weight: 700;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    color: #1f2937;
+}
+
+.dark .section-title {
+    color: #f9fafb;
+}
+
+.title-underline {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 4px;
+    width: 80px;
+    border-radius: 9999px;
+    background: linear-gradient(to right, #60a5fa, #2dd4bf);
+}
+
+.skill-categories {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    background: #f3f4f6;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #374151;
+    border: 1px solid transparent;
+}
+
+.skill-detail {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.skill-detail.active {
+    opacity: 1;
+}
+
+.skill-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+}
+
+.dark .skill-name {
+    color: #f9fafb;
+}
+
+.skill-level {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #60a5fa, #2dd4bf);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.skill-description {
+    font-size: 0.875rem;
+    color: #6b7280;
+    max-width: 250px;
+}
+
+.dark .skill-description {
+    color: #d1d5db;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .chart-container {
+    height: 300px;
+    }
+}
+
+@media (max-width: 640px) {
+    .chart-container {
+    height: 250px;
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .pagination-container {
+        --tw-shadow-color: rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Optional: Add hover animation */
+.pagination-item:not(.cursor-not-allowed):hover {
+    transform: translateY(-1px);
+}
+
+/* Optional: Add active state */
+.pagination-item:not(.cursor-not-allowed):active {
+    transform: translateY(1px);
+}
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Space+Mono:wght@700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+<!-- Sections -->
+<section id="hero" class="min-h-screen flex items-center justify-center">
+    <div class="container mx-auto px-6">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+            <!-- Text Content (Left) -->
+            <div class="w-full md:w-1/2 text-left">
+                <div class="space-y-4">
+                    <h3 class="text-xl font-medium">Hello, I'm</h3>
+                    <h1 class="text-5xl md:text-6xl font-bold text-gray-800 dark:text-white">Rephrain Archaimeric</h1>
+                    <p class="text-2xl text-gray-600 dark:text-gray-300">
+                        Data Professional
+                    </p>
+                    <div class="pt-6">
+                        <!-- Primary Button -->
+                        {% if resume %}
+                        <a href="{{ resume.file.url }}" download>
+                        <button class="bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 font-medium py-3 px-8 rounded-full shadow-lg transition duration-300 mr-4">
+                            Download CV
+                        </button>
+                        </a>
+                        {% endif %}
+                    
+                        <!-- Secondary Button -->
+                        <button class="border-2 border-black dark:border-white text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black font-medium py-3 px-8 rounded-full transition duration-300">
+                            Contact Me
+                        </button>
+                    </div>
+                                     
+                </div>
+            </div>
+            
+            <!-- Profile Image (Right) -->
+            <div class="w-full md:w-1/2 flex justify-center mt-10 md:mt-0">
+                <div class="relative">
+                    <!-- Background Circle -->
+                    <div class="absolute inset-0 bg-blue-100 dark:bg-blue-900/30 rounded-full transform -translate-x-4 translate-y-4"></div>
+                    <!-- Profile Image -->
+                    <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-xl">
+                        {% load static %}
+                        <img src="{% static 'img/avatar.jpg' %}" alt="Rephrain Archaimeric" 
+                             class="w-full h-full object-cover rounded-full border-2 border-gray-300 dark:border-gray-600 shadow-lg" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about-me" class="py-12 scroll-mt-20">
+    <h2 class="text-3xl font-bold text-center mb-12 relative">
+        <span class="relative z-10">About Me</span>
+        <span class="title-underline"></span>
+    </h2>
+    
+    <div class="flex flex-col md:flex-row gap-8 items-stretch mb-8">
+        <!-- Profile Image -->
+        <div class="md:w-1/3">
+            <div class="rounded-3xl overflow-hidden bg-gray-100 dark:bg-gray-800 shadow-lg transition-colors">
+                {% load static %}
+                <img src="{% static 'img/profile_image.jpg' %}" alt="Rephrain Archaimeric" 
+                        class="w-full h-full object-cover border-2 border-gray-300 dark:border-gray-600 shadow-lg" />
+            </div>
+        </div>
+        
+        <!-- Content Side -->
+        <div class="md:w-2/3">
+            <!-- Experience & Education Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <!-- Experience Card -->
+                <div class="p-6 rounded-2xl border border-gray-300 dark:border-gray-700 bg-background-light dark:bg-gray-900 text-center">
+                    <div class="flex justify-center mb-4">
+                        <span class="bg-gray-100 dark:bg-gray-700 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-gray-100">Experience</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-1"><b>{{ experience_engineer }} years</b> Data Engineering & Web Development</p>
+                    <p class="text-gray-600 dark:text-gray-300"><b>{{ experience_science }} years</b> Data Scientist & Analysis</p>
+                </div>
+                
+                <!-- Education Card -->
+                <div class="p-6 rounded-2xl border border-gray-300 dark:border-gray-700 bg-background-light dark:bg-gray-900 text-center">
+                    <div class="flex justify-center mb-4">
+                        <span class="bg-gray-100 dark:bg-gray-700 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                                <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                            </svg>
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-gray-100">Education</h3>
+                    <p class="text-gray-600 dark:text-gray-300">B.Eng. Bachelor's Degree</p>
+                </div>
+            </div>
+            
+            <div class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p class="mb-4">
+                    A data professional passionate about transforming complex information into actionable insights. With expertise in Python, SQL, Machine Learning, and Big Data, I build scalable data pipelines, develop predictive models, and deliver impactful solutions across industries.
+                </p>
+                
+                <div class="relative px-6 py-10 text-center">
+                    <p class="text-2xl sm:text-3xl md:text-4xl text-gray-900 dark:text-white leading-snug font-light">
+                      I transform 
+                      <span class="italic font-medium text-gray-700 dark:text-gray-300">
+                        data chaos
+                      </span>
+                  
+                      <span class="inline-block mx-2 px-4 py-1 bg-black text-white dark:bg-white dark:text-black rounded-md shadow-sm transition-transform duration-300 hover:scale-105 font-mono text-base sm:text-lg">
+                        INTO
+                      </span>
+                  
+                      <span class="font-semibold text-gray-900 dark:text-white underline underline-offset-4 decoration-gray-300 dark:decoration-gray-500">
+                        strategic clarity
+                      </span>
+                    </p>
+                    <p class="mt-4 text-lg sm:text-xl text-gray-600 dark:text-gray-400">
+                      that drives measurable business outcomes.
+                    </p>
+                  </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-6 rounded-2xl border border-gray-300 dark:border-gray-700 bg-background-light dark:bg-gray-900 text-left">
+        <div class="flex flex-col md:flex-row items-start md:items-center">
+            <!-- Left side: Background Story -->
+            <div class="md:w-2/3 pr-0 md:pr-8">
+                <h3 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">My Journey</h3>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                    Spans from supporting nationwide banking operations to implementing machine learning solutions for government institutions. I approach challenges with a data-driven mindset, turning problems into opportunities for innovation and meaningful impact.
+                </p>
+                
+                <div class="mt-6">
+                    <a href="#contact" class="inline-block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition duration-300">
+                        Let's connect <span class="ml-1">→</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Right side: Key Skills -->
+            <div class="md:w-1/3 mt-8 md:mt-0">
+                <h3 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">Core Skills</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-center">
+                        <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 p-1 rounded mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="text-gray-700 dark:text-gray-300">Data Analysis & Visualization</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200 p-1 rounded mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="text-gray-700 dark:text-gray-300">Machine Learning & AI</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 p-1 rounded mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="text-gray-700 dark:text-gray-300">Data Engineering & ETL</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 p-1 rounded mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="text-gray-700 dark:text-gray-300">Big Data Processing</span>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 p-1 rounded mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="text-gray-700 dark:text-gray-300">Statistical Analysis</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="skills" class="skill-container scroll-mt-20">
+    <h2 class="section-title">
+        Technical Skills
+        <span class="title-underline"></span>
+    </h2>
+    <div class="skill-categories">
+        <!-- Dynamic generation of category buttons -->
+        {% for category in categories %}
+            <button 
+                class="category-btn 
+                    !bg-{{ category.color }}-100 
+                    !text-{{ category.color }}-800 
+                    hover:!bg-{{ category.color }}-200 
+                    active:!bg-{{ category.color }}-500 
+                    active:!text-black 
+                    dark:!bg-{{ category.color }}-900 
+                    dark:!text-{{ category.color }}-100
+                    dark:hover:!bg-{{ category.color }}-700 
+                    dark:active:!bg-{{ category.color }}-500 
+                    dark:active:!text-white" 
+                data-category="{{ category.slug }}"
+                data-color="{{ category.color }}">
+                {{ category.name }}
+            </button>
+        {% endfor %}
+    </div>
+    <div class="chart-container">
+        <canvas id="skillsRadar"></canvas>
+        <div class="skill-detail">
+            <div class="skill-name">Hover over a skill</div>
+            <div class="skill-level">0%</div>
+            <div class="skill-description">Hover over any skill in the chart to see details</div>
+        </div>
+    </div>
+</section>
+
+<section id="recent-projects" class="py-12 scroll-mt-20">
+    <h2 class="text-3xl font-bold text-center mb-8 relative">
+        <span class="relative z-10">My Recent Projects</span>
+        <span class="title-underline"></span>
+    </h2>
+    
+    <!-- Search and Filter Bar -->
+    <div class="mb-8 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
+        <form method="GET" action="#recent-projects" class="space-y-5">
+            <!-- Top Row: Search bar -->
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <input type="text" name="search" value="{{ request.GET.search|default:'' }}" 
+                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                    bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400
+                    focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 
+                    transition-all duration-200" 
+                    placeholder="Search projects by title, description or skills...">
+            </div>
+            
+            <!-- Middle Row: Filter options -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Category Filter Dropdown -->
+                <div>
+                    <label for="category-filter" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
+                    <div class="relative">
+                        <select id="category-filter" name="category" 
+                                class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 dark:border-gray-600 
+                                rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white
+                                focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 
+                                appearance-none transition-all duration-200">
+                            <option value="">All Categories</option>
+                            {% for cat in all_categories %}
+                                <option value="{{ cat.slug }}" {% if request.GET.category == cat.slug %}selected{% endif %}>
+                                    {{ cat.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Skills Filter Dropdown -->
+                <div>
+                    <label for="skill-filter" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Skill</label>
+                    <div class="relative">
+                        <select id="skill-filter" name="skill" 
+                                class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 dark:border-gray-600 
+                                rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white
+                                focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 
+                                appearance-none transition-all duration-200">
+                            <option value="">All Skills</option>
+                            {% for category in all_categories %}
+                                <optgroup label="{{ category.name }}">
+                                    {% for skill in category.skills.all %}
+                                        <option value="{{ skill.id }}" {% if request.GET.skill == skill.id|stringformat:"i" %}selected{% endif %}>
+                                            {{ skill.name }}
+                                        </option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Row: Category Pills and Action Buttons -->
+            <div class="flex justify-between items-center">
+                <!-- Category Pills - Visual Indicators -->
+                <div class="flex flex-wrap gap-2">
+                    <a href="/#recent-projects" 
+                    class="{% if not request.GET.category %}bg-indigo-600 text-white{% else %}bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200{% endif %} 
+                    px-4 py-2 rounded-full text-sm font-medium hover:bg-opacity-90 transition-all duration-200 flex items-center">
+                        <span>All</span>
+                    </a>
+                    {% for cat in all_categories %}
+                        <a href="/?category={{ cat.slug }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.skill %}&skill={{ request.GET.skill }}{% endif %}#recent-projects" 
+                        class="{% if request.GET.category == cat.slug %}bg-{{ cat.color.color }}-600 text-white{% else %}bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200{% endif %} 
+                        px-4 py-2 rounded-full text-sm font-medium hover:bg-opacity-90 transition-all duration-200 flex items-center">
+                            <span>{{ cat.name }}</span>
+                        </a>
+                    {% endfor %}
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-end items-center gap-3">
+                    <a href="/#recent-projects" 
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg 
+                    text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-200 
+                    flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Clear
+                    </a>
+                    <button type="submit" 
+                            class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg 
+                            text-sm font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-all duration-200 
+                            flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        Apply Filter
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Active Filters Display -->
+            {% if request.GET.search or request.GET.category or request.GET.skill %}
+            <div class="pt-3 border-t border-gray-200 dark:border-gray-700">
+                <div class="text-sm text-gray-600 dark:text-gray-400 flex flex-wrap items-center gap-2">
+                    <span>Active filters:</span>
+                    {% if request.GET.search %}
+                    <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-md flex items-center">
+                        "{{ request.GET.search }}"
+                    </span>
+                    {% endif %}
+                    
+                    {% if request.GET.category %}
+                    {% for cat in all_categories %}
+                        {% if request.GET.category == cat.slug %}
+                        <span class="bg-{{ cat.color.color }}-100 dark:bg-{{ cat.color.color }}-900 text-{{ cat.color.color }}-800 dark:text-{{ cat.color.color }}-200 px-2 py-1 rounded-md flex items-center">
+                            {{ cat.name }}
+                        </span>
+                        {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                    
+                    {% if request.GET.skill %}
+                    {% for category in all_categories %}
+                        {% for skill in category.skills.all %}
+                            {% if request.GET.skill == skill.id|stringformat:"i" %}
+                            <span class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-md flex items-center">
+                                {{ skill.name }}
+                            </span>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+    
+    <!-- Projects Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% if projects %}
+            {% for project in projects %}
+            <div onclick="window.location='{{ project.link }}';" class="relative p-6 h-full flex flex-col rounded-lg shadow-md dark:shadow-[0_4px_6px_rgba(255,255,255,0.1)] bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-700 hover:shadow-lg dark:hover:shadow-[0_6px_10px_rgba(255,255,255,0.2)] theme-transition cursor-pointer">
+
+                <!-- Project Preview Image -->
+                <img src="{{ project.image.url }}" alt="{{ project.title }} Preview" class="w-full h-48 object-cover rounded-md mb-4">
+
+                <!-- Top Row: Title + Tag -->
+                <div class="flex items-start justify-between mb-4">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white">{{ project.title }}</h3>
+                    {% with project.category.color.color as color %}
+                    <div class="bg-{{ color }}-500 text-white dark:bg-{{ color }}-400 dark:text-black text-xs font-bold px-3 py-1 rounded-full shadow-md dark:shadow-[0_2px_8px_rgba(255,255,255,0.15)] ring-1 ring-black/10 dark:ring-white/10 whitespace-nowrap">
+                        {{ project.category.name }}
+                    </div>
+                    {% endwith %}
+                </div>                   
+
+                <!-- Centered Content Area -->
+                <div class="flex-1 flex flex-col">
+                    <p class="text-gray-600 dark:text-gray-300 mb-4 whitespace-pre-line">
+                        {{ project.description|safe }}
+                    </p>
+
+                    <div class="flex flex-wrap gap-2">
+                        {% for skill in project.skill.all %}
+                            {% with color=skill.category.color.color %}
+                                <span class="bg-{{ color }}-100 dark:bg-{{ color }}-900 text-{{ color }}-800 dark:text-{{ color }}-200 text-xs px-3 py-1 rounded-full">
+                                    {{ skill.name }}
+                                </span>
+                            {% endwith %}
+                        {% endfor %}
+                    </div>          
+                </div>
+
+                <!-- Bottom Link -->
+                <div class="mt-6">
+                    {% if project.link %}
+                        <a href="{{ project.link }}" class="inline-block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition duration-300">
+                            View Project <span class="ml-1">→</span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-span-full py-12 text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 dark:text-gray-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 class="text-xl font-medium text-gray-700 dark:text-gray-300">No projects found</h3>
+                <p class="text-gray-500 dark:text-gray-400 mt-2">Try adjusting your search or filter criteria</p>
+                <a href="/#recent-projects" class="mt-4 inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200">
+                    Clear filters
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Pagination -->
+    {% if projects %}
+    <div class="pagination-container flex justify-center my-8">
+        <div class="pagination-wrapper relative inline-flex rounded-lg shadow-md overflow-hidden transition-all duration-300 
+                    border border-gray-200 dark:border-gray-700 bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
+            
+            <!-- First Page -->
+            {% if projects.has_previous %}
+                <a href="?project_page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}#recent-projects" class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium border-r border-gray-200 dark:border-gray-700
+                        text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white 
+                        focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 focus:z-10 transition-all duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                    <span class="hidden sm:inline-block ml-1">First</span>
+                </a>
+            {% else %}
+                <span class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium border-r border-gray-200 dark:border-gray-700
+                        text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-800 cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                    <span class="hidden sm:inline-block ml-1">First</span>
+                </span>
+            {% endif %}
+            
+            <!-- Previous Page -->
+            {% if projects.has_previous %}
+                <a href="?project_page={{ projects.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}#recent-projects" class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium border-r border-gray-200 dark:border-gray-700
+                        text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white 
+                        focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 focus:z-10 transition-all duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span class="hidden sm:inline-block ml-1">Previous</span>
+                </a>
+            {% else %}
+                <span class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium border-r border-gray-200 dark:border-gray-700
+                        text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-800 cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span class="hidden sm:inline-block ml-1">Previous</span>
+                </span>
+            {% endif %}
+            
+            <!-- Current Page Indicator -->
+            <div class="pagination-item relative inline-flex items-center justify-center px-4 py-2 
+                    border-r border-gray-200 dark:border-gray-700
+                    bg-gradient-to-r from-indigo-500 to-purple-600 dark:text-white text-black font-medium text-sm
+                    shadow-sm">
+                <span>{{ projects.number }} of {{ projects.paginator.num_pages }}</span>
+            </div>
+            
+            <!-- Next Page -->
+            {% if projects.has_next %}
+                <a href="?project_page={{ projects.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}#recent-projects" class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium border-r border-gray-200 dark:border-gray-700
+                        text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white 
+                        focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 focus:z-10 transition-all duration-200">
+                    <span class="hidden sm:inline-block mr-1">Next</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            {% else %}
+                <span class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium border-r border-gray-200 dark:border-gray-700
+                        text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-800 cursor-not-allowed">
+                    <span class="hidden sm:inline-block mr-1">Next</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            {% endif %}
+            
+            <!-- Last Page -->
+            {% if projects.has_next %}
+                <a href="?project_page={{ projects.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}#recent-projects" class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium
+                        text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white 
+                        focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 focus:z-10 transition-all duration-200">
+                    <span class="hidden sm:inline-block mr-1">Last</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    </svg>
+                </a>
+            {% else %}
+                <span class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium
+                        text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-800 cursor-not-allowed">
+                    <span class="hidden sm:inline-block mr-1">Last</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    </svg>
+                </span>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+<!-- Blog Section -->
+<section id="blog" class="py-12 scroll-mt-20">
+    <h2 class="text-3xl font-bold text-center mb-12 relative">
+        <span class="relative z-10">Latest Articles</span>
+        <span class="title-underline"></span>
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {% for article in articles %}
+        <div onclick="window.location='{{ article.link }}';" class="rounded-lg shadow-md dark:shadow-[0_4px_6px_rgba(255,255,255,0.1)] bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-700 hover:shadow-lg dark:hover:shadow-[0_6px_10px_rgba(255,255,255,0.2)] theme-transition cursor-pointer">
+            <img src="{{ article.image.url }}" alt="{{ article.title }}" class="h-48 w-full object-cover rounded-t-lg" />
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">{{ article.title }}</h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-4">{{ article.content }}</p>
+                {% if article.link %}
+                    <a href="{{ article.link }}" class="text-primary-light dark:text-primary-dark hover:underline" target="_blank">Read more →</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container flex justify-center my-8">
+        <div class="pagination-wrapper relative inline-flex rounded-lg shadow-md overflow-hidden transition-all duration-300 
+                    border border-gray-200 dark:border-gray-700 bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
+            
+            <!-- First Page -->
+            {% if articles.has_previous %}
+                <a href="?article_page=1#blog" class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium border-r border-gray-200 dark:border-gray-700
+                        text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white 
+                        focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 focus:z-10 transition-all duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                    <span class="hidden sm:inline-block ml-1">First</span>
+                </a>
+            {% else %}
+                <span class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium border-r border-gray-200 dark:border-gray-700
+                        text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-800 cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                    <span class="hidden sm:inline-block ml-1">First</span>
+                </span>
+            {% endif %}
+            
+            <!-- Previous Page -->
+            {% if articles.has_previous %}
+                <a href="?article_page={{ articles.previous_page_number }}#blog" class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium border-r border-gray-200 dark:border-gray-700
+                        text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white 
+                        focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 focus:z-10 transition-all duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span class="hidden sm:inline-block ml-1">Previous</span>
+                </a>
+            {% else %}
+                <span class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium border-r border-gray-200 dark:border-gray-700
+                        text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-800 cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span class="hidden sm:inline-block ml-1">Previous</span>
+                </span>
+            {% endif %}
+            
+            <!-- Current Page Indicator -->
+            <div class="pagination-item relative inline-flex items-center justify-center px-4 py-2 
+                    border-r border-gray-200 dark:border-gray-700
+                    bg-gradient-to-r from-indigo-500 to-purple-600 dark:text-white text-black font-medium text-sm
+                    shadow-sm">
+                <span>{{ articles.number }} of {{ articles.paginator.num_pages }}</span>
+            </div>
+            
+            <!-- Next Page -->
+            {% if articles.has_next %}
+                <a href="?article_page={{ articles.next_page_number }}#blog" class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium border-r border-gray-200 dark:border-gray-700
+                        text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white 
+                        focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 focus:z-10 transition-all duration-200">
+                    <span class="hidden sm:inline-block mr-1">Next</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            {% else %}
+                <span class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium border-r border-gray-200 dark:border-gray-700
+                        text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-800 cursor-not-allowed">
+                    <span class="hidden sm:inline-block mr-1">Next</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            {% endif %}
+            
+            <!-- Last Page -->
+            {% if articles.has_next %}
+                <a href="?article_page={{ articles.paginator.num_pages }}#blog" class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium
+                        text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white 
+                        focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 focus:z-10 transition-all duration-200">
+                    <span class="hidden sm:inline-block mr-1">Last</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    </svg>
+                </a>
+            {% else %}
+                <span class="pagination-item relative inline-flex items-center justify-center px-3 py-2 sm:px-4 
+                        text-sm font-medium
+                        text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-800 cursor-not-allowed">
+                    <span class="hidden sm:inline-block mr-1">Last</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    </svg>
+                </span>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-12 scroll-mt-20">
+    <h2 class="text-3xl font-bold text-center mb-12 relative">
+        <span class="relative z-10">Get in Touch</span>
+        <span class="title-underline"></span>
+    </h2>
+    
+    <div class="max-w-xl mx-auto p-6 rounded-lg shadow-md bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-700">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 rounded-lg shadow-sm overflow-hidden transition-all duration-300 ease-in-out hover:shadow-md">
+                    <div class="p-4 border-l-4 {% if message.tags == 'success' %}border-green-500 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200{% else %}border-red-500 bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200{% endif %}">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-0.5">
+                                {% if message.tags == 'success' %}
+                                    <svg class="h-5 w-5 text-green-500 dark:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                {% else %}
+                                    <svg class="h-5 w-5 text-red-500 dark:text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                {% endif %}
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium">{{ message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label for="{{ form.name.id_for_label }}" class="block text-gray-700 dark:text-gray-300 mb-2">Name</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.name.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <label for="{{ form.email.id_for_label }}" class="block text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <label for="{{ form.message.id_for_label }}" class="block text-gray-700 dark:text-gray-300 mb-2">Message</label>
+                {{ form.message }}
+                {% if form.message.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.message.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <button type="submit" 
+                class="w-full px-6 py-3 rounded-md shadow-md 
+                    bg-black text-white dark:bg-gray-300 dark:text-black 
+                    hover:bg-gray-800 dark:hover:bg-gray-400 
+                    transition-opacity focus:outline-none 
+                    focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 dark:focus:ring-gray-600">
+                Send Message
+            </button>
+        </form>
+    </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script>
+
+// Define skills data
+const skillsData = {{ skills_by_category_json|safe }};
+
+// const skillsData = {
+//     programming: [
+//         { name: 'Python', level: 95, description: 'Proficient in leveraging Python for data science, machine learning, and intelligent automation — with strengths in data processing, model development, and backend systems.' },
+//         { name: 'SQL', level: 90, description: 'Database design, complex queries, and optimization.' },
+//         { name: 'JavaScript', level: 85, description: 'Frontend development, async programming, and DOM manipulation.' },
+//         { name: 'Java', level: 70, description: 'Utilized for algorithm design and logic implementation in backend systems and problem-solving tasks.' },
+//         { name: 'R', level: 75, description: 'Statistical computing, data visualization, and data analysis using R libraries.' }
+//     ],
+//     science: [
+//         {
+//             name: 'Machine Learning',
+//             level: 90,
+//             description: 'Developed classification, clustering, and regression models using scikit-learn.'
+//         },
+//         {
+//             name: 'Statistics',
+//             level: 90,
+//             description: 'Applied statistical methods for A/B testing, forecasting, and data interpretation.'
+//         },
+//         {
+//             name: 'Deep Learning',
+//             level: 70,
+//             description: 'Built and trained neural networks with TensorFlow and PyTorch for tasks like image recognition and text generation.'
+//         },
+//         {
+//             name: 'NLP',
+//             level: 85,
+//             description: 'Processed and analyzed text data using spaCy and NLTK; sentiment analysis and custom text classifiers.'
+//         },
+//         {
+//             name: 'Time Series Forecasting',
+//             level: 75,
+//             description: 'Created ARIMA-based models to predict trends and patterns in financial and retail datasets using Python.'
+//         },
+//         {
+//             name: 'Computer Vision',
+//             level: 70,
+//             description: 'Engineered image-based solutions with OpenCV and CNNs, including object detection and visual data preprocessing.'
+//         },
+//         {
+//             name: 'Geospatial Intelligence',
+//             level: 90,
+//             description: 'Analyzed satellite imagery and spatial data using GeoPandas, QGIS, and ArcGIS; applied machine learning for land use, land coverage, and land surface temperature intelligence.'
+//         },
+//         {
+//             name: 'OpenAI',
+//             level: 80,
+//             description: 'Performed fine-tuning and implemented Retrieval-Augmented Generation (RAG) on OpenAI models to build intelligent, context-aware applications.'
+//         }
+//     ],
+//     engineer: [
+//         {
+//             name: 'Web Scraping',
+//             level: 90,
+//             description: 'Automated large-scale data extraction using Selenium and BeautifulSoup for external data ingestion at BRI. Also scraped high-rated Tokopedia products using hidden API endpoints.'
+//         },
+//         {
+//             name: 'PySpark',
+//             level: 90,
+//             description: 'Developed and deployed PySpark pipelines in Cloudera for cleaning and transforming massive datasets at BRI.'
+//         },
+//         {
+//             name: 'ETL Pipelines',
+//             level: 75,
+//             description: 'Designed automated ETL workflows for structured data delivery across BRI’s distributed systems.'
+//         },
+//         {
+//             name: 'HDFS',
+//             level: 85,
+//             description: 'Handled big data storage and retrieval in Hadoop Distributed File System integrated with Spark at BRI.'
+//         },
+//         {
+//             name: 'Hive',
+//             level: 85,
+//             description: 'Queried and transformed enterprise data using HiveQL within BRI’s data lake infrastructure.'
+//         },
+//         {
+//             name: 'Impala',
+//             level: 85,
+//             description: 'Executed fast, scalable SQL queries on massive datasets using Impala in BRI’s Cloudera ecosystem.'
+//         }
+//     ],
+//     web: [
+//         {
+//             name: 'Django',
+//             level: 80,
+//             description: 'Built robust backend systems and admin dashboards for a hospital information system at one of the largest private hospitals in Bandung.'
+//         },
+//         {
+//             name: 'MERN Stack',
+//             level: 70,
+//             description: 'Developed full-stack components for internal health record management.'
+//         },
+//         {
+//             name: 'REST API',
+//             level: 80,
+//             description: 'Built RESTful APIs for SATUSEHAT integration, UK-based energy data workflows, and API solutions for a Bali storage firm using WhatsApp and Midtrans API.'
+//         },
+//         {
+//             name: 'Streamlit',
+//             level: 80,
+//             description: 'Created an interactive geospatial analysis tool to visualize satellite imagery and ML results for land cover classification and land surface temperature cluster.'
+//         },
+//         {
+//             name: 'Flask',
+//             level: 75,
+//             description: 'Built a lightweight chatbot application that converts user input into SQL scripts for real-time database interaction.'
+//         }
+//     ],
+//     tools: [
+//         {
+//             name: 'Google Earth Engine',
+//             level: 90,
+//             description: 'Processed satellite imagery and geospatial datasets for environmental analysis using JavaScript and Python APIs.'
+//         },
+//         {
+//             name: 'Postman API',
+//             level: 80,
+//             description: 'Tested and documented RESTful APIs for data integration, including external API authentication and response automation.'
+//         },
+//         {
+//             name: 'QGIS',
+//             level: 90,
+//             description: 'Visualized and analyzed geospatial layers and shapefiles for mapping and spatial intelligence projects.'
+//         },
+//         {
+//             name: 'Tableau',
+//             level: 75,
+//             description: 'Built interactive dashboards for a U.S.-based law firm to visualize case trends and operational metrics using calculated fields and custom filters.'
+//         },
+//         {
+//             name: 'Git',
+//             level: 75,
+//             description: 'Used Git for version control and collaboration across multiple projects including web apps and data pipelines.'
+//         },
+//         {
+//             name: 'ArcGIS',
+//             level: 70,
+//             description: 'Performed advanced spatial analysis and cartographic visualizations using ArcMap and ArcGIS Online.'
+//         }
+//     ]
+// };
+
+// Initialize chart data
+let currentCategory = 'programming';
+let activeChart = null;
+let tooltipTimeout = null;
+const skillDetail = document.querySelector('.skill-detail');
+
+function getChartColors(){
+    const colors = {
+        'red': {
+            light: {
+                bg: 'oklch(0.936 0.032 17.717 / 0.2)', // 100
+                border: 'oklch(0.637 0.237 25.331)', // 500
+                point: 'oklch(0.577 0.245 27.325)', // 600
+                hover: 'oklch(0.396 0.141 25.723)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.444 0.177 26.899 / 0.2)', // 800
+                border: 'oklch(0.637 0.237 25.331)', // 500
+                point: 'oklch(0.637 0.237 25.331)', // 500
+                hover: 'oklch(0.808 0.114 19.571)' // 300
+            }
+        },
+        'orange': {
+            light: {
+                bg: 'oklch(0.954 0.038 75.164 / 0.2)', // 100
+                border: 'oklch(0.705 0.213 47.604)', // 500
+                point: 'oklch(0.646 0.222 41.116)', // 600
+                hover: 'oklch(0.47 0.157 37.304)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.47 0.157 37.304 / 0.2)', // 800
+                border: 'oklch(0.705 0.213 47.604)', // 500
+                point: 'oklch(0.705 0.213 47.604)', // 500
+                hover: 'oklch(0.837 0.128 66.29)' // 300
+            }
+        },
+        'amber': {
+            light: {
+                bg: 'oklch(0.962 0.059 95.617 / 0.2)', // 100
+                border: 'oklch(0.769 0.188 70.08)', // 500
+                point: 'oklch(0.666 0.179 58.318)', // 600
+                hover: 'oklch(0.473 0.137 46.201)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.473 0.137 46.201 / 0.2)', // 800
+                border: 'oklch(0.769 0.188 70.08)', // 500
+                point: 'oklch(0.769 0.188 70.08)', // 500
+                hover: 'oklch(0.879 0.169 91.605)' // 300
+            }
+        },
+        'yellow': {
+            light: {
+                bg: 'oklch(0.973 0.071 103.193 / 0.2)', // 100
+                border: 'oklch(0.795 0.184 86.047)', // 500
+                point: 'oklch(0.681 0.162 75.834)', // 600
+                hover: 'oklch(0.476 0.114 61.907)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.476 0.114 61.907 / 0.2)', // 800
+                border: 'oklch(0.795 0.184 86.047)', // 500
+                point: 'oklch(0.795 0.184 86.047)', // 500
+                hover: 'oklch(0.905 0.182 98.111)' // 300
+            }
+        },
+        'lime': {
+            light: {
+                bg: 'oklch(0.967 0.067 122.328 / 0.2)', // 100
+                border: 'oklch(0.768 0.233 130.85)', // 500
+                point: 'oklch(0.648 0.2 131.684)', // 600
+                hover: 'oklch(0.453 0.124 130.933)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.453 0.124 130.933 / 0.2)', // 800
+                border: 'oklch(0.768 0.233 130.85)', // 500
+                point: 'oklch(0.768 0.233 130.85)', // 500
+                hover: 'oklch(0.897 0.196 126.665)' // 300
+            }
+        },
+        'green': {
+            light: {
+                bg: 'oklch(0.962 0.044 156.743 / 0.2)', // 100
+                border: 'oklch(0.723 0.219 149.579)', // 500
+                point: 'oklch(0.627 0.194 149.214)', // 600
+                hover: 'oklch(0.448 0.119 151.328)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.448 0.119 151.328 / 0.2)', // 800
+                border: 'oklch(0.723 0.219 149.579)', // 500
+                point: 'oklch(0.723 0.219 149.579)', // 500
+                hover: 'oklch(0.871 0.15 154.449)' // 300
+            }
+        },
+        'emerald': {
+            light: {
+                bg: 'oklch(0.95 0.052 163.051 / 0.2)', // 100
+                border: 'oklch(0.696 0.17 162.48)', // 500
+                point: 'oklch(0.596 0.145 163.225)', // 600
+                hover: 'oklch(0.432 0.095 166.913)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.432 0.095 166.913 / 0.2)', // 800
+                border: 'oklch(0.696 0.17 162.48)', // 500
+                point: 'oklch(0.696 0.17 162.48)', // 500
+                hover: 'oklch(0.845 0.143 164.978)' // 300
+            }
+        },
+        'teal': {
+            light: {
+                bg: 'oklch(0.953 0.051 180.801 / 0.2)', // 100
+                border: 'oklch(0.704 0.14 182.503)', // 500
+                point: 'oklch(0.6 0.118 184.704)', // 600
+                hover: 'oklch(0.437 0.078 188.216)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.437 0.078 188.216 / 0.2)', // 800
+                border: 'oklch(0.704 0.14 182.503)', // 500
+                point: 'oklch(0.704 0.14 182.503)', // 500
+                hover: 'oklch(0.855 0.138 181.071)' // 300
+            }
+        },
+        'cyan': {
+            light: {
+                bg: 'oklch(0.956 0.045 203.388 / 0.2)', // 100
+                border: 'oklch(0.715 0.143 215.221)', // 500
+                point: 'oklch(0.609 0.126 221.723)', // 600
+                hover: 'oklch(0.45 0.085 224.283)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.45 0.085 224.283 / 0.2)', // 800
+                border: 'oklch(0.715 0.143 215.221)', // 500
+                point: 'oklch(0.715 0.143 215.221)', // 500
+                hover: 'oklch(0.865 0.127 207.078)' // 300
+            }
+        },
+        'sky': {
+            light: {
+                bg: 'oklch(0.951 0.026 236.824 / 0.2)', // 100
+                border: 'oklch(0.685 0.169 237.323)', // 500
+                point: 'oklch(0.588 0.158 241.966)', // 600
+                hover: 'oklch(0.443 0.11 240.79)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.443 0.11 240.79 / 0.2)', // 800
+                border: 'oklch(0.685 0.169 237.323)', // 500
+                point: 'oklch(0.685 0.169 237.323)', // 500
+                hover: 'oklch(0.828 0.111 230.318)' // 300
+            }
+        },
+        'blue': {
+            light: {
+                bg: 'oklch(0.932 0.032 255.585 / 0.2)', // 100
+                border: 'oklch(0.623 0.214 259.815)', // 500
+                point: 'oklch(0.546 0.245 262.881)', // 600
+                hover: 'oklch(0.424 0.199 265.638)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.424 0.199 265.638 / 0.2)', // 800
+                border: 'oklch(0.623 0.214 259.815)', // 500
+                point: 'oklch(0.623 0.214 259.815)', // 500
+                hover: 'oklch(0.809 0.105 251.813)' // 300
+            }
+        },
+        'indigo': {
+            light: {
+                bg: 'oklch(0.93 0.034 272.788 / 0.2)', // 100
+                border: 'oklch(0.585 0.233 277.117)', // 500
+                point: 'oklch(0.511 0.262 276.966)', // 600
+                hover: 'oklch(0.398 0.195 277.366)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.398 0.195 277.366 / 0.2)', // 800
+                border: 'oklch(0.585 0.233 277.117)', // 500
+                point: 'oklch(0.585 0.233 277.117)', // 500
+                hover: 'oklch(0.785 0.115 274.713)' // 300
+            }
+        },
+        'violet': {
+            light: {
+                bg: 'oklch(0.943 0.029 294.588 / 0.2)', // 100
+                border: 'oklch(0.606 0.25 292.717)', // 500
+                point: 'oklch(0.541 0.281 293.009)', // 600
+                hover: 'oklch(0.432 0.232 292.759)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.432 0.232 292.759 / 0.2)', // 800
+                border: 'oklch(0.606 0.25 292.717)', // 500
+                point: 'oklch(0.606 0.25 292.717)', // 500
+                hover: 'oklch(0.811 0.111 293.571)' // 300
+            }
+        },
+        'purple': {
+            light: {
+                bg: 'oklch(0.946 0.033 307.174 / 0.2)', // 100
+                border: 'oklch(0.627 0.265 303.9)', // 500
+                point: 'oklch(0.558 0.288 302.321)', // 600
+                hover: 'oklch(0.438 0.218 303.724)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.438 0.218 303.724 / 0.2)', // 800
+                border: 'oklch(0.627 0.265 303.9)', // 500
+                point: 'oklch(0.627 0.265 303.9)', // 500
+                hover: 'oklch(0.827 0.119 306.383)' // 300
+            }
+        },
+        'fuchsia': {
+            light: {
+                bg: 'oklch(0.952 0.037 318.852 / 0.2)', // 100
+                border: 'oklch(0.667 0.295 322.15)', // 500
+                point: 'oklch(0.591 0.293 322.896)', // 600
+                hover: 'oklch(0.452 0.211 324.591)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.452 0.211 324.591 / 0.2)', // 800
+                border: 'oklch(0.667 0.295 322.15)', // 500
+                point: 'oklch(0.667 0.295 322.15)', // 500
+                hover: 'oklch(0.833 0.145 321.434)' // 300
+            }
+        },
+        'pink': {
+            light: {
+                bg: 'oklch(0.948 0.028 342.258 / 0.2)', // 100
+                border: 'oklch(0.656 0.241 354.308)', // 500
+                point: 'oklch(0.592 0.249 0.584)', // 600
+                hover: 'oklch(0.459 0.187 3.815)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.459 0.187 3.815 / 0.2)', // 800
+                border: 'oklch(0.656 0.241 354.308)', // 500
+                point: 'oklch(0.656 0.241 354.308)', // 500
+                hover: 'oklch(0.823 0.12 346.018)' // 300
+            }
+        },
+        'rose': {
+            light: {
+                bg: 'oklch(0.941 0.03 12.58 / 0.2)', // 100
+                border: 'oklch(0.645 0.246 16.439)', // 500
+                point: 'oklch(0.586 0.253 17.585)', // 600
+                hover: 'oklch(0.455 0.188 13.697)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.455 0.188 13.697 / 0.2)', // 800
+                border: 'oklch(0.645 0.246 16.439)', // 500
+                point: 'oklch(0.645 0.246 16.439)', // 500
+                hover: 'oklch(0.81 0.117 11.638)' // 300
+            }
+        },
+        'slate': {
+            light: {
+                bg: 'oklch(0.968 0.007 247.896 / 0.2)', // 100
+                border: 'oklch(0.554 0.046 257.417)', // 500
+                point: 'oklch(0.446 0.043 257.281)', // 600
+                hover: 'oklch(0.279 0.041 260.031)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.279 0.041 260.031 / 0.2)', // 800
+                border: 'oklch(0.554 0.046 257.417)', // 500
+                point: 'oklch(0.554 0.046 257.417)', // 500
+                hover: 'oklch(0.869 0.022 252.894)' // 300
+            }
+        },
+        'gray': {
+            light: {
+                bg: 'oklch(0.967 0.003 264.542 / 0.2)', // 100
+                border: 'oklch(0.551 0.027 264.364)', // 500
+                point: 'oklch(0.446 0.03 256.802)', // 600
+                hover: 'oklch(0.278 0.033 256.848)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.278 0.033 256.848 / 0.2)', // 800
+                border: 'oklch(0.551 0.027 264.364)', // 500
+                point: 'oklch(0.551 0.027 264.364)', // 500
+                hover: 'oklch(0.872 0.01 258.338)' // 300
+            }
+        },
+        'zinc': {
+            light: {
+                bg: 'oklch(0.967 0.001 286.375 / 0.2)', // 100
+                border: 'oklch(0.552 0.016 285.938)', // 500
+                point: 'oklch(0.442 0.017 285.786)', // 600
+                hover: 'oklch(0.274 0.006 286.033)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.274 0.006 286.033 / 0.2)', // 800
+                border: 'oklch(0.552 0.016 285.938)', // 500
+                point: 'oklch(0.552 0.016 285.938)', // 500
+                hover: 'oklch(0.871 0.006 286.286)' // 300
+            }
+        },
+        'neutral': {
+            light: {
+                bg: 'oklch(0.97 0 0 / 0.2)', // 100
+                border: 'oklch(0.556 0 0)', // 500
+                point: 'oklch(0.439 0 0)', // 600
+                hover: 'oklch(0.269 0 0)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.269 0 0 / 0.2)', // 800
+                border: 'oklch(0.556 0 0)', // 500
+                point: 'oklch(0.556 0 0)', // 500
+                hover: 'oklch(0.87 0 0)' // 300
+            }
+        },
+        'stone': {
+            light: {
+                bg: 'oklch(0.97 0.001 106.424 / 0.2)', // 100
+                border: 'oklch(0.553 0.013 58.071)', // 500
+                point: 'oklch(0.444 0.011 73.639)', // 600
+                hover: 'oklch(0.268 0.007 34.298)' // 800
+            },
+            dark: {
+                bg: 'oklch(0.268 0.007 34.298 / 0.2)', // 800
+                border: 'oklch(0.553 0.013 58.071)', // 500
+                point: 'oklch(0.553 0.013 58.071)', // 500
+                hover: 'oklch(0.869 0.005 56.366)' // 300
+            }
+        }
+    }
+    const buttons = document.querySelectorAll('.category-btn');
+
+    // If you also want the color (like 'teal', 'blue', etc.), you can do this:
+    const categoriesWithColor = Array.from(buttons).map(btn => ({
+        slug: btn.dataset.category,
+        color: btn.dataset.color
+    }));
+
+    const updatedChartColors = {};
+
+    categoriesWithColor.forEach(({ slug, color }) => {
+        if (colors[color]) {
+            updatedChartColors[slug] = colors[color];
+        }
+    });
+
+    return updatedChartColors;
+}
+
+// Function to get skills based on selected category
+function getSkillsByCategory(category) {
+    return skillsData[category];
+}
+
+// Create the radar chart
+function createChart(category) {
+    const chartColors = getChartColors();
+
+    const skills = getSkillsByCategory(category);
+    const ctx = document.getElementById('skillsRadar').getContext('2d');
+
+    if (activeChart) {
+    activeChart.destroy();
+    }
+
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    const theme = isDarkMode ? 'dark' : 'light';
+    const colors = chartColors[category]?.[theme] || chartColors.programming.light; // fallback
+
+    const textColor = isDarkMode ? '#e5e7eb' : '#374151';
+    const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+
+    activeChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+        labels: skills.map(skill => skill.name),
+        datasets: [{
+        label: 'Skill Level',
+        data: skills.map(skill => skill.level),
+        backgroundColor: colors.bg,
+        borderColor: colors.border,
+        borderWidth: 2,
+        pointBackgroundColor: colors.point,
+        pointHoverBackgroundColor: colors.hover,
+        pointHoverBorderColor: colors.hover,
+        pointHoverRadius: 7,
+        pointRadius: 5
+        }]
+    },
+    options: {
+        scales: {
+        r: {
+            angleLines: {
+            color: gridColor
+            },
+            grid: {
+            color: gridColor
+            },
+            pointLabels: {
+            color: textColor,
+            font: {
+                size: 14,
+                weight: '500'
+            }
+            },
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+            stepSize: 20,
+            color: textColor,
+            backdropColor: 'transparent'
+            }
+        }
+        },
+        plugins: {
+        legend: {
+            display: false
+        },
+        tooltip: {
+            enabled: false,
+            external: function(context) {
+            clearTimeout(tooltipTimeout);
+            
+            if (context.tooltip.opacity === 0) {
+                tooltipTimeout = setTimeout(() => {
+                skillDetail.classList.remove('active');
+                }, 100);
+                return;
+            }
+            
+            const index = context.tooltip.dataPoints[0].dataIndex;
+            const skill = skills[index];
+            
+            document.querySelector('.skill-name').textContent = skill.name;
+            document.querySelector('.skill-level').textContent = skill.level + '%';
+            document.querySelector('.skill-description').textContent = skill.description;
+            
+            skillDetail.classList.add('active');
+            }
+        }
+        },
+        maintainAspectRatio: false,
+        responsive: true
+    }
+    });
+}
+
+// Initialize the chart with all skills
+document.addEventListener('DOMContentLoaded', function() {
+    // Helper function to check if dark mode is active
+    function isDarkMode() {
+        return document.documentElement.classList.contains('dark');
+    }
+    
+    // Helper function to update button styles
+    function updateButtonStyles() {
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            const btnColor = btn.getAttribute('data-color');
+            const isActive = btn.classList.contains('active');
+            
+            // First remove all theme-specific classes
+            btn.classList.remove(`!bg-${btnColor}-100`, `!bg-${btnColor}-200`, `!bg-${btnColor}-500`, `!bg-${btnColor}-700`, `!bg-${btnColor}-900`);
+            btn.classList.remove(`!text-${btnColor}-100`, `!text-${btnColor}-800`, `!text-black`, `!text-white`);
+            btn.classList.remove(`hover:!bg-${btnColor}-200`, `dark:hover:!bg-${btnColor}-700`);
+            
+            // Then apply the correct classes based on current theme and active state
+            if (isActive) {
+                // Active button state
+                btn.classList.add(`!bg-${btnColor}-500`);
+                btn.classList.add(isDarkMode() ? '!text-white' : '!text-black');
+            } else {
+                // Inactive button state with hover
+                if (isDarkMode()) {
+                    btn.classList.add(`!bg-${btnColor}-900`);
+                    btn.classList.add(`!text-${btnColor}-100`);
+                    btn.classList.add(`dark:hover:!bg-${btnColor}-700`);
+                } else {
+                    btn.classList.add(`!bg-${btnColor}-100`);
+                    btn.classList.add(`!text-${btnColor}-800`);
+                    btn.classList.add(`hover:!bg-${btnColor}-200`);
+                }
+            }
+        });
+        
+        // Call createChart outside the loop to prevent multiple calls
+        createChart(currentCategory);
+    }
+    
+    // Initialize the first button as active if no button is already active
+    const buttons = document.querySelectorAll('.category-btn');
+    let hasActiveButton = false;
+    
+    buttons.forEach(btn => {
+        if (btn.classList.contains('active')) {
+            hasActiveButton = true;
+        }
+    });
+    
+    if (!hasActiveButton && buttons.length > 0) {
+        buttons[0].classList.add('active');
+        currentCategory = buttons[0].getAttribute('data-category');
+    }
+    
+    // Initial style setup
+    updateButtonStyles();
+    
+    // Add event listeners to category buttons
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active state from all buttons
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to this button
+            this.classList.add('active');
+            
+            // Update chart and category
+            currentCategory = this.getAttribute('data-category');
+            
+            // Update all button styles
+            updateButtonStyles();
+        });
+    });
+    
+    // Handle theme changes
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'class') {
+                // When theme changes, update all button styles immediately
+                updateButtonStyles();
+            }
+        });
+    });
+    
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class']
+    });
+    
+    // Also attach to theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+    
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+            // Wait a tiny bit for the class to be updated
+            setTimeout(updateButtonStyles, 50);
+        });
+    }
+    
+    if (mobileThemeToggle) {
+        mobileThemeToggle.addEventListener('click', function() {
+            // Wait a tiny bit for the class to be updated
+            setTimeout(updateButtonStyles, 50);
+        });
+    }
+
+    // Get all pagination links
+    const paginationLinks = document.querySelectorAll('.pagination-item[href*="#"]');
+    
+    // Add click event listeners to each link
+    paginationLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        // Store the href with the hash
+        const href = this.getAttribute('href');
+        const targetId = href.substring(href.indexOf('#'));
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          // If the URL is just changing the hash (same page), prevent default and scroll
+          if (window.location.search === href.substring(0, href.indexOf('#'))) {
+            e.preventDefault();
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else {
+            // If we're changing pages, store the target in sessionStorage
+            sessionStorage.setItem('scrollTarget', targetId);
+          }
+        }
+      });
+    });
+    
+    // Check if we need to scroll on page load
+    const scrollTarget = sessionStorage.getItem('scrollTarget');
+    if (scrollTarget) {
+      // Small timeout to ensure the page is fully loaded
+      setTimeout(() => {
+        const element = document.querySelector(scrollTarget);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Clear the stored target
+          sessionStorage.removeItem('scrollTarget');
+        }
+      }, 100);
+    }
+});
+</script>
+{% endblock %}
