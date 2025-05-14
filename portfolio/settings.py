@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-t&s1m^%o7tni_@wpjoi%wn&i6@@lq^9+p9=qqja2#^m$hdi+3+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["https://oratio-satusehat-production.up.railway.app"] 
 
 # Application definition
 
