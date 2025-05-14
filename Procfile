@@ -1,1 +1,1 @@
-web: pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn oratio.wsgi
+web: apt-get update && apt-get install -y python3-pip && pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn oratio.wsgi
