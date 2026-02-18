@@ -253,24 +253,20 @@
                 </p>
                 
                 <div class="relative px-6 py-10 text-center">
-                    <p class="text-2xl sm:text-3xl md:text-4xl text-gray-900 dark:text-white leading-snug font-light">
-                      I transform 
-                      <span class="italic font-medium text-gray-700 dark:text-gray-300">
-                        data chaos
-                      </span>
-                  
-                      <span class="inline-block mx-2 px-4 py-1 bg-black text-white dark:bg-white dark:text-black rounded-md shadow-sm transition-transform duration-300 hover:scale-105 font-mono text-base sm:text-lg">
-                        INTO
-                      </span>
-                  
-                      <span class="font-semibold text-gray-900 dark:text-white underline underline-offset-4 decoration-gray-300 dark:decoration-gray-500">
-                        strategic clarity
-                      </span>
-                    </p>
-                    <p class="mt-4 text-lg sm:text-xl text-gray-600 dark:text-gray-400">
-                      that drives measurable business outcomes.
-                    </p>
-                  </div>
+                <p class="text-2xl sm:text-3xl md:text-4xl text-gray-900 dark:text-white leading-relaxed font-light tracking-wide">
+                    I transform 
+                    <span class="font-medium text-gray-900 dark:text-white">
+                    data chaos
+                    </span>
+                    into
+                    <span class="font-medium text-gray-900 dark:text-white">
+                    strategic clarity
+                    </span>
+                </p>
+                <p class="mt-6 text-lg sm:text-xl text-gray-600 dark:text-gray-400 font-light">
+                    that drives measurable business outcomes.
+                </p>
+                </div>
             </div>
         </div>
     </div>
@@ -714,7 +710,7 @@
             <img src="{{ article.image.url }}" alt="{{ article.title }}" class="h-48 w-full object-cover rounded-t-lg" />
             <div class="p-6">
                 <h3 class="text-xl font-semibold mb-2">{{ article.title }}</h3>
-                <p class="text-gray-600 dark:text-gray-300 mb-4">{{ article.content }}</p>
+                <p class="text-gray-600 dark:text-gray-300 mb-4">{{ article.content|safe }}</p>
                 {% if article.link %}
                     <a href="{{ article.link }}" class="text-primary-light dark:text-primary-dark hover:underline" target="_blank">Read more →</a>
                 {% endif %}
@@ -1403,9 +1399,8 @@ function createChart(category) {
     const theme = isDarkMode ? 'dark' : 'light';
     const colors = chartColors[category]?.[theme] || chartColors.programming.light; // fallback
 
-    const textColor = isDarkMode ? '#e5e7eb' : '#374151';
-    const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-
+    const textColor = isDarkMode ? '#e5e7eb' : '#111827';
+    const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
     activeChart = new Chart(ctx, {
     type: 'radar',
     data: {
@@ -1436,7 +1431,7 @@ function createChart(category) {
             color: textColor,
             font: {
                 size: 14,
-                weight: '500'
+                weight: '650'
             }
             },
             beginAtZero: true,
